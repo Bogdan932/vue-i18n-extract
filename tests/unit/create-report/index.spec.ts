@@ -76,6 +76,7 @@ describe('file: create-report/index', () => {
       expectedI18NReport.missingKeys,
       Dot,
       '',
+      '',
     );
     expect(consoleInfoSpy).toHaveBeenLastCalledWith('\nThe missing keys have been added to your language files.');
   });
@@ -91,6 +92,7 @@ describe('file: create-report/index', () => {
       expectedI18NReport.missingKeys,
       Dot,
       '*',
+      '',
     );
     expect(consoleInfoSpy).toHaveBeenLastCalledWith('\nThe missing keys have been added to your language files.');
   });
@@ -106,6 +108,7 @@ describe('file: create-report/index', () => {
       expectedI18NReport.missingKeys,
       Dot,
       'en',
+      '',
     );
     expect(consoleInfoSpy).toHaveBeenLastCalledWith('\nThe missing keys have been added to your language files.');
   });
@@ -126,7 +129,7 @@ describe('file: create-report/index', () => {
   it('Only detect missing', async () => {
     const report = await createI18NReport({...options, detect: [DetectionType.Missing]});
     const expectedI18NReportOnlyDetectingMissing = {...expectedI18NReport, unusedKeys: [], maybeDynamicKeys: []};
-    
+
     expect(report).toEqual(
       expectedI18NReportOnlyDetectingMissing
     );

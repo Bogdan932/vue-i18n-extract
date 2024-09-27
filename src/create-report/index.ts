@@ -23,7 +23,7 @@ export async function createI18NReport (options: ReportOptions): Promise<I18NRep
   if (!vueFilesGlob) throw new Error('Required configuration vueFiles is missing.');
   if (!languageFilesGlob) throw new Error('Required configuration languageFiles is missing.');
 
-  let issuesToDetect = Array.isArray(detect) ? detect : [detect];
+  const issuesToDetect = Array.isArray(detect) ? detect : [detect];
   const invalidDetectOptions = issuesToDetect.filter(item => !Object.values(DetectionType).includes(item));
   if (invalidDetectOptions.length) {
     throw new Error(`Invalid 'detect' value(s): ${invalidDetectOptions}`);

@@ -10,7 +10,7 @@
     "demo:debug": "node ./bin/vue-i18n-extract.js report --vueFiles './tests/fixtures/vue-files/**/*.?(vue|js)' --languageFiles './tests/fixtures/lang/**/*.?(json|yaml|yml|js)'",
     "test": "jest",
     "test:dev": "jest --watch",
-    "lint": "eslint **/*.ts"
+    "lint": "eslint src/**/*.ts"
   },
   "license": "MIT",
   "source": "src/index.ts",
