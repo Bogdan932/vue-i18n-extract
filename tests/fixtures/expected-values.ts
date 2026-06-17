@@ -257,7 +257,21 @@ export const expectedFromParsedVueFiles = [
     nextCharacter: "'",
     file: './tests/fixtures/vue-files/Missing.vue',
     line: 4
-  }
+  },
+  {
+    path: 'translate_for_separate_only',
+    previousCharacter: "'",
+    nextCharacter: "'",
+    file: './tests/fixtures/vue-files/PageWithSeparateTranslation.vue',
+    line: 3
+  },
+  {
+    path: 'translate_for_separate_only_v2',
+    previousCharacter: "'",
+    nextCharacter: "'",
+    file: './tests/fixtures/vue-files/PageWithSeparateTranslationV2.vue',
+    line: 3
+  },
 ];
 
 export const expectedFromParsedLanguageFiles = {
@@ -296,6 +310,14 @@ export const expectedFromParsedLanguageFiles = {
     },
     {
       path: 'unused_js',
+      file: './tests/fixtures/lang/de_DE.js',
+    },
+    {
+      path: 'translate_for_separate_only_v2',
+      file: './tests/fixtures/lang/de_DE.js',
+    },
+    {
+      path: 'translate_for_separate_only',
       file: './tests/fixtures/lang/de_DE.js',
     },
     {
@@ -354,6 +376,14 @@ export const expectedFromParsedLanguageFiles = {
     },
     {
       path: 'unused_nested.forgot',
+      file: './tests/fixtures/lang/en_EN.json',
+    },
+    {
+      path: 'translate_for_separate_only_v2',
+      file: './tests/fixtures/lang/en_EN.json',
+    },
+    {
+      path: 'translate_for_separate_only',
       file: './tests/fixtures/lang/en_EN.json',
     }
   ]

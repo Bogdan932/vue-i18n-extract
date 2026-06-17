@@ -1,0 +1,3 @@
+module.exports = {
+  translate_for_separate_only: "Translate for separate page only"
+};

@@ -7,4 +7,5 @@ module.exports = {
     '**/tests/unit/**/*.spec.(js|ts)|**/__tests__/*.(js|ts)'
   ],
   verbose: false,
+  silent: false,
 };

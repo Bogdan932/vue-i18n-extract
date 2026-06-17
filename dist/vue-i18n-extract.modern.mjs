@@ -158,7 +158,9 @@ function readLanguageFiles(src) {
   if (targetFiles.length === 0) {
     throw new Error('languageFiles glob has no files.');
   }
-  return targetFiles.map(f => {
+  return targetFiles.filter(f => {
+    return (path.basename(f).match(/\./g) || []).length === 1;
+  }).map(f => {
     const langPath = path.resolve(process.cwd(), f);
     const extension = langPath.substring(langPath.lastIndexOf('.')).toLowerCase();
     const isJSON = extension === '.json';
@@ -171,6 +173,19 @@ function readLanguageFiles(src) {
     } else {
       langObj = eval(fs.readFileSync(langPath, 'utf8'));
     }
+    // Adding separate translations to main language file
+    targetFiles.filter(tF => tF !== f && path.basename(tF).includes(path.basename(f))).forEach(separateFileName => {
+      const additionalPath = path.resolve(process.cwd(), separateFileName);
+      let additionalTranslations;
+      if (isJSON) {
+        additionalTranslations = JSON.parse(fs.readFileSync(additionalPath, 'utf8'));
+      } else if (isYAML) {
+        additionalTranslations = yaml.load(fs.readFileSync(additionalPath, 'utf8'));
+      } else {
+        additionalTranslations = eval(fs.readFileSync(additionalPath, 'utf8'));
+      }
+      Object.assign(langObj, additionalTranslations);
+    });
     const fileName = f.replace(process.cwd(), '.');
     return {
       path: f,
@@ -307,7 +322,7 @@ async function createI18NReport(options) {
   } = options;
   if (!vueFilesGlob) throw new Error('Required configuration vueFiles is missing.');
   if (!languageFilesGlob) throw new Error('Required configuration languageFiles is missing.');
-  let issuesToDetect = Array.isArray(detect) ? detect : [detect];
+  const issuesToDetect = Array.isArray(detect) ? detect : [detect];
   const invalidDetectOptions = issuesToDetect.filter(item => !Object.values(DetectionType).includes(item));
   if (invalidDetectOptions.length) {
     throw new Error(`Invalid 'detect' value(s): ${invalidDetectOptions}`);

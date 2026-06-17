@@ -20,26 +20,48 @@ export function readLanguageFiles (src: string): SimpleFile[] {
     throw new Error('languageFiles glob has no files.');
   }
 
-  return targetFiles.map(f => {
-    const langPath = path.resolve(process.cwd(), f);
+  return targetFiles
+    .filter((f) => {
+      return (path.basename(f).match(/\./g) || []).length === 1;
+    })
+    .map(f => {
+      const langPath = path.resolve(process.cwd(), f);
 
-    const extension = langPath.substring(langPath.lastIndexOf('.')).toLowerCase();
-    const isJSON = extension === '.json';
-    const isYAML = extension === '.yaml' || extension === '.yml';
+      const extension = langPath.substring(langPath.lastIndexOf('.')).toLowerCase();
+      const isJSON = extension === '.json';
+      const isYAML = extension === '.yaml' || extension === '.yml';
 
-    let langObj;
-    if (isJSON) {
-      langObj = JSON.parse(fs.readFileSync(langPath, 'utf8'));
-    } else if (isYAML) {
-      langObj = yaml.load(fs.readFileSync(langPath, 'utf8'));
-    } else {
-      langObj = eval(fs.readFileSync(langPath, 'utf8'));
-    }
+      let langObj;
+      if (isJSON) {
+        langObj = JSON.parse(fs.readFileSync(langPath, 'utf8'));
+      } else if (isYAML) {
+        langObj = yaml.load(fs.readFileSync(langPath, 'utf8'));
+      } else {
+        langObj = eval(fs.readFileSync(langPath, 'utf8'));
+      }
 
-    const fileName = f.replace(process.cwd(), '.');
+      // Adding separate translations to main language file
+      targetFiles
+        .filter((tF) => tF !== f && path.basename(tF).includes(path.basename(f)))
+        .forEach((separateFileName) => {
+          const additionalPath = path.resolve(process.cwd(), separateFileName);
+          let additionalTranslations;
 
-    return { path: f, fileName, content: JSON.stringify(langObj) };
-  });
+          if (isJSON) {
+            additionalTranslations = JSON.parse(fs.readFileSync(additionalPath, 'utf8'));
+          } else if (isYAML) {
+            additionalTranslations = yaml.load(fs.readFileSync(additionalPath, 'utf8'));
+          } else {
+            additionalTranslations = eval(fs.readFileSync(additionalPath, 'utf8'));
+          }
+
+          Object.assign(langObj, additionalTranslations);
+        });
+
+      const fileName = f.replace(process.cwd(), '.');
+
+      return { path: f, fileName, content: JSON.stringify(langObj) };
+    });
 }
 
 export function extractI18NLanguageFromLanguageFiles (languageFiles: SimpleFile[], dot: DotObject.Dot = Dot): I18NLanguage {
